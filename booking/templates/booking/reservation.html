@@ -1,0 +1,121 @@
+{% extends "booking/header.html" %}
+
+{% block content %}
+  <div class="container">
+    <h1>Reservation</h1>
+    {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+    {% endif %}
+    <form action="book" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+          <label for="hotel"> Choose hotel</label>
+          <select class="form-control" id="hotel" name="hotel">
+            {% if hotels %}
+              {% for h in hotels %}
+                <option class="{{ h.price }}" value="{{ h.id }}">{{ h.name }} - Price per night: {{ h.price }}</option>
+              {% endfor %}
+            {% else %}
+              <option class="{{ hotel.price }}" value="{{ hotel.id }}">{{ hotel.name}} - Price per night: {{ hotel.price }}</option>
+            {% endif %}
+          </select>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-md-6">
+          <label>Arrival date</label>
+          {% if arrival_date %}
+            <input class="form-control" type="date" value="{{arrival_date}}" id="arrival_date" name="arrival_date">
+          {% else %}
+            <input class="form-control" type="date" value="" id="arrival_date" name="arrival_date">
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          <label>Departure date</label>
+          {% if departure_date %}
+          <input class="form-control" type="date" value="{{ departure_date }}" id="departure_date" name="departure_date">
+          {% else %}
+          <input class="form-control" type="date" value="" id="departure_date" name="departure_date">
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>How many rooms do you need?</label>
+          {% if nr_rooms %}
+        <input class="form-control" type="number" id="nr_rooms" name="nr_rooms" value="{{ nr_rooms }}">
+          {% else %}
+        <input class="form-control" type="number" id="nr_rooms" name="nr_rooms" value="">
+          {% endif %}
+      </div>
+
+      <div class="row form-group">
+        <div class="col-md-6">
+          <label>First name</label>
+          <input class="form-control" type="text" value="" name="last_name">
+        </div>
+        <div class="col-md-6">
+          <label>Last name</label>
+          <input class="form-control" type="text" value="" name="first_name">
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-md-6">
+          <label>Phone nr</label>
+          <input class="form-control" type="number" value="" name="phone_nr">
+        </div>
+        <div class="col-md-6">
+          <label>Email</label>
+          <input class="form-control" type="email" value="" name="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        Total price for <span id="totalDaysSpan"></span> days will cost you <span id="totalPriceSpan"></span>,-
+      </div>
+      <input type="hidden" id="totalPrice" name="totalPrice" value="">
+      <input type="hidden" id="totalDays" name="totalDays" value=""
+
+      <div class="form-group">
+        <button class="btn btn-success" type="submit">Book</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function() {
+
+      var getInfo = function() {
+        a = $("#arrival_date").val();
+        d = $("#departure_date").val();
+        if (a != "" && d != "") {
+          var price = $("#hotel").find(':selected').attr('class');
+          var rooms = $("#nr_rooms").val();
+
+          var arrival = moment(a).format('MM/DD/YYYY');
+          var departure = moment(d).format('MM/DD/YYYY');
+
+          var days = moment(departure).diff(arrival, 'days');
+
+          $("#totalDaysSpan").html(days);
+          $("#totalPriceSpan").html(price * days * rooms);
+          $("#totalDays").val(days);
+          $("#totalPrice").val(price * days * rooms);
+        }
+      }
+        
+      $("#arrival_date, #departure_date, #nr_rooms").on('change', function() {
+        getInfo();
+      });
+
+      getInfo();
+    });
+  </script>
+{% endblock %}

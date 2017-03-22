@@ -1,0 +1,49 @@
+{% extends "booking/header.html" %}
+
+{% block content %}
+  <div class="container">
+    <h2>
+      Search Results
+      <br>
+      <small>
+        Available hotels in {{ city.name }} 
+      </small>
+    </h2>
+
+    <table class="table table-striped">
+      <thead>
+        <tr> 
+          <th>Hotel</th>
+          <th>City</th>
+          <th>Price per room</th>
+          <th>Available rooms</th>
+          <th>Book</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for hotel in hotels %}
+          <tr>
+            <td>{{ hotel.name }}</td>
+            <td>{{ city.name }}</td>
+            <td>{{ hotel.price }}</td>
+            <td>{{ hotel.nr_rooms }}</td>
+            <td>
+              <a href="/booking/reservation?arrival_date={{ arrival_date }}&departure_date={{ departure_date }}&nr_rooms={{ nr_rooms }}&hotel={{hotel.id}}" class="book-btn btn btn-success btn-sm">
+                Book now!
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="hidden" id="arrival_date" value="{{ arrival_date }}">
+    <input type="hidden" id="departure_date" value="{{ departure_date }}">
+    <input type="hidden" id="nr_rooms" value="{{ nr_rooms }}">
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+
+  </script>
+{% endblock %}
