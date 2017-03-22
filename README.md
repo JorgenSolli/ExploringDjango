@@ -18,4 +18,5 @@ INSERT INTO `booking_city` (`id`, `name`) VALUES
 - - - -
 
 First time EVERY coding in Python and using Django
+
 Time spendt: 6hr 12min
