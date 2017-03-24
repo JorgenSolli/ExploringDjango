@@ -17,7 +17,7 @@ class Reservation(models.Model):
 	last_name  	= models.CharField(max_length=140)
 	phone      	= models.IntegerField()
 	email 		= models.CharField(max_length=140)
-	hotel_id 	= models.ForeignKey(Hotel)
+	hotel 		= models.ForeignKey(Hotel)
 	arrival 	= models.DateTimeField()
 	departure 	= models.DateTimeField()
 	total_rooms = models.IntegerField()
