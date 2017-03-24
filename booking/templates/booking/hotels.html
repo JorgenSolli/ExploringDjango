@@ -3,7 +3,13 @@
 {% block content %}
   <div class="container">
     <h1>Find hotels</h1>
-
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
     <form action="search/" method="post">
       <div class="form-group">
         {% csrf_token %}

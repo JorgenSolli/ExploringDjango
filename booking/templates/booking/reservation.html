@@ -10,6 +10,7 @@
           </div>
         {% endfor %}
     {% endif %}
+
     <form action="book" method="post">
       {% csrf_token %}
       <div class="form-group">
@@ -37,19 +38,18 @@
         <div class="col-md-6">
           <label>Departure date</label>
           {% if departure_date %}
-          <input class="form-control" type="date" value="{{ departure_date }}" id="departure_date" name="departure_date">
+            <input class="form-control" type="date" value="{{ departure_date }}" id="departure_date" name="departure_date">
           {% else %}
-          <input class="form-control" type="date" value="" id="departure_date" name="departure_date">
+            <input class="form-control" type="date" value="" id="departure_date" name="departure_date">
           {% endif %}
         </div>
       </div>
-
       <div class="form-group">
         <label>How many rooms do you need?</label>
           {% if nr_rooms %}
-        <input class="form-control" type="number" id="nr_rooms" name="nr_rooms" value="{{ nr_rooms }}">
+            <input class="form-control" type="number" id="nr_rooms" name="nr_rooms" value="{{ nr_rooms }}">
           {% else %}
-        <input class="form-control" type="number" id="nr_rooms" name="nr_rooms" value="">
+            <input class="form-control" type="number" id="nr_rooms" name="nr_rooms" value="">
           {% endif %}
       </div>
 
@@ -76,10 +76,10 @@
       </div>
 
       <div class="form-group">
-        Total price for <span id="totalDaysSpan"></span> days will cost you <span id="totalPriceSpan"></span>,-
+        Total price for <span id="totalDaysSpan">0</span> days will cost you <span id="totalPriceSpan">0</span>,-
       </div>
       <input type="hidden" id="totalPrice" name="totalPrice" value="">
-      <input type="hidden" id="totalDays" name="totalDays" value=""
+      <input type="hidden" id="totalDays" name="totalDays" value="">
 
       <div class="form-group">
         <button class="btn btn-success" type="submit">Book</button>

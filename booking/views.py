@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from booking.models import Hotel, City, Reservation
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
+from django.db.models import Sum
 
 def index(request):
 	return render(request, 'booking/index.html')
@@ -26,7 +27,7 @@ def reservation(request):
 			'hotel': hotel,
 			'arrival_date': arrival_date,
 			'departure_date': departure_date,
-			'nr_rooms': nr_rooms,
+			'nr_rooms': nr_rooms
 		})
 	else:
 		hotels = Hotel.objects.all()
@@ -35,26 +36,53 @@ def reservation(request):
 		})
 
 def search(request):
-	if request.method == 'POST':
+	if request.method == 'POST'         		\
+		and 'city' in request.POST      		\
+		and 'arrival_date' in request.POST      \
+		and 'departure_date' in request.POST    \
+    	and 'nr_rooms' in request.POST:
+		
 		city = request.POST['city']
 		arrival_date = request.POST['arrival_date']
 		departure_date = request.POST['departure_date']
 		nr_rooms = request.POST['nr_rooms']
 		max_price = request.POST['max_price']
 
-		cityName = City.objects.filter(id=city)[0]
-		hotels = Hotel.objects.filter(city_id=city).order_by('-price')
+		if city and arrival_date and departure_date and nr_rooms:
 
-		return render(request, 'booking/search.html', {
-			'hotels': hotels,
-			'city': cityName,
-			'arrival_date': arrival_date,
-			'departure_date': departure_date,
-			'nr_rooms': nr_rooms,
-			'max_price': max_price
-		})
+			cityName = City.objects.filter(id=city)[0]
+			# available_rooms = Reservation.objects.raw('''SELECT hotel_id AS id, booking_hotel.city_id, 
+			# 													booking_hotel.price, 
+			# 													sum(total_rooms) AS total_rooms 
+			# 											 FROM booking_reservation 
+			# 											 INNER JOIN booking_hotel ON booking_reservation.hotel_id = booking_hotel.id 
+			# 											 WHERE departure >= %s 
+			# 											 	AND booking_hotel.city_id = %s 
+			# 										 	 GROUP BY hotel_id 
+			# 										 	 ORDER BY price 
+			# 										 	 	ASC''', [departure_date, city])
+
+			# available_rooms = Reservation.objects.filter(departure__gte=departure_date).select_related('hotel_id').aggregate(total_rooms=Sum('total_rooms'))
+
+			if max_price:
+				hotels = Hotel.objects.filter(city_id=city).filter(price=max_price).filter(nr_rooms__gte=nr_rooms).order_by('-price')
+			else:
+				hotels = Hotel.objects.filter(city_id=city).filter(nr_rooms__gte=nr_rooms).order_by('-price')
+
+			return render(request, 'booking/search.html', {
+				'hotels': hotels,
+				'city': cityName,
+				'arrival_date': arrival_date,
+				'departure_date': departure_date,
+				'nr_rooms': nr_rooms,
+				'max_price': max_price
+			})
+		else: 
+			messages.add_message(request, messages.INFO, 'Make sure all required fields are filled!')
+			return redirect('/booking/hotels')
 	else:
-		return render(request, 'booking/search.html')
+		messages.add_message(request, messages.INFO, 'Something went wrong. Please try again')
+		return redirect('/booking/hotels')
 
 def book(request):
 	if request.method == 'POST'              \
