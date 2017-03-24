@@ -46,6 +46,19 @@ def search(request):
 		cityName = City.objects.filter(id=city)[0]
 		hotels = Hotel.objects.filter(city_id=city).order_by('-price')
 
+		# available_rooms = Reservation.objects.raw('''SELECT hotel_id AS id, booking_hotel.city_id, 
+		# 													booking_hotel.price, 
+		# 													sum(total_rooms) AS total_rooms 
+		# 											 FROM booking_reservation 
+		# 											 INNER JOIN booking_hotel ON booking_reservation.hotel_id = booking_hotel.id 
+		# 											 WHERE departure >= %s 
+		# 											 	AND booking_hotel.city_id = %s 
+		# 										 	 GROUP BY hotel_id 
+		# 										 	 ORDER BY price 
+		# 										 	 	ASC''', [departure_date, city])
+
+		# available_rooms = Reservation.objects.filter(departure__gte=departure_date).select_related('hotel_id').aggregate(total_rooms=Sum('total_rooms'))
+
 		return render(request, 'booking/search.html', {
 			'hotels': hotels,
 			'city': cityName,
