@@ -86,7 +86,6 @@ def book(request):
 		city = City.objects.filter(id=hotel.city_id)[0]
 
 		reserved_rooms = Reservation.objects.filter(departure__gte=departure_date).filter(arrival__lte=arrival_date).filter(hotel_id=hotel_id).aggregate(total_rooms=Sum('total_rooms'))
-		print(reserved_rooms)
 
 		if int(total_rooms) <= int(hotel.nr_rooms):
 			Reservation.objects.create(
