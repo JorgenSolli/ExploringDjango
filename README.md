@@ -17,6 +17,12 @@ INSERT INTO `booking_city` (`id`, `name`) VALUES
 ```
 - - - -
 
+Issues:
+Had a more less complex query that I could not for the life of me manage to convert into a Django querySet.
+You can find the raw query and the failed atempt at the querySet in booking/views.py at line 54 and below.
+
+- - - -
+
 First time ever coding in Python and using Django
 
-Time spendt: 6hr 12min
+Time spendt: ~7hrs
