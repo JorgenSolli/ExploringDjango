@@ -19,8 +19,12 @@ INSERT INTO `booking_hotel` (`id`, `name`, `city_id`, `nr_rooms`, `price`) VALUE
 - - - -
 
 Issues:
+
 Had a more less complex query that I could not for the life of me manage to convert into a Django querySet.
+
 You can find the raw query and the failed atempt at the querySet in booking/views.py at line 54 and below.
+
+Instead of eliminating hotels at the search, the user will instead get an error message when trying to book a hotel if there arent enough rooms available. Not a optimal solution, but it works. 
 
 - - - -
 
