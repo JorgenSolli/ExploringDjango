@@ -30,4 +30,4 @@ Instead of eliminating hotels at the search, the user will instead get an error 
 
 First time ever coding in Python and using Django
 
-Time spendt: ~7hrs
+Time spent: ~7hrs
